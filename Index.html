@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ensiklopedia Arsitektur Nusantara</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f0f0f">
+
+<style>
+body{
+  margin:0;
+  font-family: system-ui, -apple-system;
+  background:#0f0f0f;
+  color:#e5e5e5;
+}
+header{
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #333;
+}
+main{padding:16px}
+.card{
+  background:#1a1a1a;
+  padding:18px;
+  border-radius:16px;
+  margin-bottom:16px;
+}
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border:1px solid #444;
+  border-radius:999px;
+  font-size:12px;
+  margin:4px 4px 0 0;
+}
+button{
+  background:#e5e5e5;
+  color:#000;
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  margin-top:10px;
+}
+#modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+#modalContent{
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:16px;
+  max-width:320px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Arsitektur Nusantara</h1>
+  <small>Ensiklopedia 38 Provinsi • PWA • Monokrom</small>
+</header>
+
+<main id="app"></main>
+
+<div id="modal" onclick="this.style.display='none'">
+  <div id="modalContent"></div>
+</div>
+
+<script>
+/* ==== DATA (ringkas, bisa kamu kembangkan) ==== */
+const DATA = [
+ {provinsi:"Sumatera Barat",utama:"Rumah Gadang",variasi:[
+  {nama:"Gajah Maharam",detail:"Rumah bangsawan Minangkabau."},
+  {nama:"Rangkiang",detail:"Lumbung padi adat."}
+ ]},
+ {provinsi:"Jawa Tengah",utama:"Joglo",variasi:[
+  {nama:"Limasan",detail:"Hunian masyarakat umum."},
+  {nama:"Tajug",detail:"Bangunan sakral."}
+ ]},
+ {provinsi:"Papua",utama:"Honai",variasi:[
+  {nama:"Ebeai",detail:"Honai khusus perempuan."},
+  {nama:"Wamai",detail:"Kandang ternak."}
+ ]}
+];
+
+/* ==== RENDER ==== */
+const app = document.getElementById("app");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
+
+DATA.forEach(item=>{
+  const div=document.createElement("div");
+  div.className="card";
+  div.innerHTML=`
+    <h2>${item.utama}</h2>
+    <p><b>Provinsi:</b> ${item.provinsi}</p>
+    <p><b>Tipologi:</b> Rumah panggung tradisional.</p>
+    <p><b>Struktur:</b> Kayu, pasak, adaptif iklim.</p>
+    <p><b>Filosofi:</b> Representasi kosmologi lokal.</p>
+    <div>${item.variasi.map(v=>`<span class="badge" onclick="showDetail('${v.nama}','${v.detail}')">${v.nama}</span>`).join("")}</div>
+  `;
+  app.appendChild(div);
+});
+
+function showDetail(nama,detail){
+  modal.style.display="flex";
+  modalContent.innerHTML=`<h3>${nama}</h3><p>${detail}</p><button onclick="modal.style.display='none'">Tutup</button>`;
+}
+
+/* ==== SERVICE WORKER ==== */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
